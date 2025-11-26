@@ -18,7 +18,7 @@ pipeline {
             steps {
                 echo "Running basic syntax check..."
                 // Simple syntax check of app.py
-                bat 'python -m py_compile app.py'
+                bat 'C:\\Users\\USER\\anaconda3\\python.exe app.py'
             }
         }
 
