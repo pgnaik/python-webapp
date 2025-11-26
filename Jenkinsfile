@@ -2,12 +2,11 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "pgn123/python-webapp"  
-        DOCKER_TAG = "latest"
+        DOCKER_IMAGE = "pgn123/python-webapp"
+        DOCKER_TAG   = "latest"
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 // Pull latest code from GitHub
@@ -17,13 +16,12 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                // (Optional) Create virtualenv or just run basic tests
                 echo "Running basic syntax check..."
-                // For simple script, we might just do:
+                // Simple syntax check of app.py
                 bat 'python -m py_compile app.py'
             }
         }
-      
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -38,9 +36,12 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CRED',
                                                      usernameVariable: 'USER',
                                                      passwordVariable: 'PASS')]) {
-                        bat "echo $PASS | docker login -u $USER --password-stdin"
+                        // Windows-friendly docker login using Jenkins credentials
+                        bat "docker login -u %USER% -p %PASS%"
                         bat "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
                     }
                 }
             }
         }
+    }
+}
