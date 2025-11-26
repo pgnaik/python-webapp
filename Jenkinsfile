@@ -43,5 +43,26 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Stop and remove existing container if running (Windows cmd syntax)
+                    bat "docker rm -f python-webapp || exit /b 0"
+
+                    // Run new container
+                    bat "docker run -d --name python-webapp -p 8080:5000 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment success! Open: http://<jenkins-server-ip>:8080"
+        }
+        failure {
+            echo "Build or deployment failed."
+        }
     }
 }
