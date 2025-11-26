@@ -51,7 +51,7 @@ pipeline {
                     bat "docker rm -f python-webapp || exit /b 0"
 
                     // Run new container
-                    bat "docker run -d --name python-webapp -p 8080:5000 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    bat "docker run -d --name python-webapp -p 5000:5000 ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
