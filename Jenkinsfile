@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "yourdockerusername/python-webapp"  // change this
+        DOCKER_IMAGE = "pgn123/python-webapp"  
         DOCKER_TAG = "latest"
     }
 
@@ -20,14 +20,14 @@ pipeline {
                 // (Optional) Create virtualenv or just run basic tests
                 echo "Running basic syntax check..."
                 // For simple script, we might just do:
-                sh 'python -m py_compile app.py'
+                bat 'python -m py_compile app.py'
             }
         }
       
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    bat "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                 }
             }
         }
@@ -38,8 +38,8 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CRED',
                                                      usernameVariable: 'USER',
                                                      passwordVariable: 'PASS')]) {
-                        sh "echo $PASS | docker login -u $USER --password-stdin"
-                        sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        bat "echo $PASS | docker login -u $USER --password-stdin"
+                        bat "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
                     }
                 }
             }
